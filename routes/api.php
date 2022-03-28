@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\Challenge\ChallengeController;
 use App\Http\Controllers\Challenge\ChallengeTypeController;
+use App\Http\Controllers\SubmittedChallengeController;
 use App\Http\Controllers\Team\TeamController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +22,12 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'v1'], function(){
     Route::post('user-registration', [UserController::class, 'store']);
     Route::post('/login', [ApiAuthController::class,'login']);
-
+    Route::post('/logout',[ApiAuthController::class, 'logout']);
+    Route::get('/fetch-challenges',[ChallengeController::class, 'userChallenges']);
+    Route::get('/challenge/{userId}/{challengeId}', [SubmittedChallengeController::class, 'fetchChallenge']);
+    Route::get('/team-wise-submitted/{challengeId}', [SubmittedChallengeController::class, 'teamWiseSuccessfullySubmitted']);
+    Route::get('/user-wise-submitted/{challengeId}', [SubmittedChallengeController::class, 'userWiseSuccessfullySubmitted']);
+    Route::post('/store-submission', [SubmittedChallengeController::class, 'store']);
 
     Route::group(['middleware' => ['auth:api']], function(){
         Route::resource('users', UserController::class)->except('store');
@@ -31,12 +37,6 @@ Route::group(['prefix' => 'v1'], function(){
 
         Route::resource('challenge-type', ChallengeTypeController::class);
         Route::resource('challenges', ChallengeController::class);
-        //post.(/challenges)
-        //put.(/challenges/{id}
-        //delete(/challenges/{id}
-        //get(/challenges/{id})
-        //get(/challenges)
-        //[{id:1, text: ''}]
     });
 });
 

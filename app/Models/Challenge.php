@@ -23,6 +23,7 @@ class Challenge extends Model
         'slug',
         'type',
         'flag',
+        'score',
     ];
     public function category()
     {

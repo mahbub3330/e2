@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Challenge;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\ChallengeFormatService;
 use App\Http\Services\FileUploadRemoveService;
 use App\Models\Challenge;
 use Illuminate\Http\Request;
@@ -11,14 +12,14 @@ class ChallengeController extends Controller
 {
     public function index()
     {
-        $challenges = Challenge::query()->get();
+        $challenges = Challenge::query()->with('category')->get();
 
         return response()->json($challenges);
     }
 
     public function show(Challenge $challenge)
     {
-        return response()->json($challenge);
+        return response()->json($challenge->load('category'));
     }
 
     public function store(Challenge $challenge, Request $request)
@@ -71,4 +72,12 @@ class ChallengeController extends Controller
             return response()->json(['message' => $exception->getMessage()]);
         }
     }
+
+    public function userChallenges()
+    {
+        $challenges = ChallengeFormatService::formatChallenges();
+        return response()->json($challenges);
+    }
+
+
 }
