@@ -45,7 +45,7 @@ class SubmittedChallengeController extends Controller
             ->get()->unique('team_id')->map(function ($val) {
                 return [
                     'team' => $val->team->name ?? null,
-                    'submitted_at' => $val->created_at ?? null,
+                    'submitted_at' => \Carbon\Carbon::parse($val->created_at)->format('Y-m-d h:i:s') ?? null,
                 ];
             });
 
@@ -73,16 +73,13 @@ class SubmittedChallengeController extends Controller
     public function store(Request $request, SubmittedChallenge $submittedChallenge)
     {
         try {
-            DB::beginTransaction();
             $submittedChallenge->fill($request->all());
             $submittedChallenge->try = (int)$submittedChallenge->try + 1;
             //TO DO status checking
 
             $submittedChallenge->save();
-
             return response()->json($submittedChallenge);
         } catch (\Exception $exception) {
-            DB::rollBack();
             return response()->json($exception->getMessage());
         }
     }

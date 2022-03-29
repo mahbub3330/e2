@@ -28,15 +28,15 @@ Route::group(['prefix' => 'v1'], function(){
     Route::get('/team-wise-submitted/{challengeId}', [SubmittedChallengeController::class, 'teamWiseSuccessfullySubmitted']);
     Route::get('/user-wise-submitted/{challengeId}', [SubmittedChallengeController::class, 'userWiseSuccessfullySubmitted']);
     Route::post('/store-submission', [SubmittedChallengeController::class, 'store']);
+    Route::resource('users', UserController::class)->except('store');
+
+    Route::resource('teams', TeamController::class);
+    Route::post('team-login',[TeamController::class, 'login']);
+
+    Route::resource('challenge-type', ChallengeTypeController::class);
+    Route::resource('challenges', ChallengeController::class);
 
     Route::group(['middleware' => ['auth:api']], function(){
-        Route::resource('users', UserController::class)->except('store');
-
-        Route::resource('teams', TeamController::class);
-        Route::post('team-login',[TeamController::class, 'login']);
-
-        Route::resource('challenge-type', ChallengeTypeController::class);
-        Route::resource('challenges', ChallengeController::class);
     });
 });
 

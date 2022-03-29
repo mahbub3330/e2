@@ -52,15 +52,15 @@ class TeamController extends Controller
     public function login(Request $request, TeamMember $teamMember)
     {
         $validator = $request->validate([
-            'name' => 'required|string|email|max:255',
-            'password' => 'required|string|min:6',
+            'name' => 'required',
+            'password' => 'required',
         ]);
         $team = Team::where('name', '=', $request->get('name'))->first();
         if (!$team) {
-            return response()->json(['success' => false, 'message' => 'Login Failed, No Team exists with this name!']);
+            return response()->json(['success' => 404, 'message' => 'Login Failed, No Team exists with this name!']);
         }
         if (!Hash::check($request->get('password'), $team->password)) {
-            return response()->json(['success' => false, 'message' => 'Login Failed, pls check password']);
+            return response()->json(['success' => 404, 'message' => 'Login Failed, pls check password']);
         }
 
 

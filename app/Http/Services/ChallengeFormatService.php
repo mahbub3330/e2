@@ -16,6 +16,7 @@ class ChallengeFormatService
                     'id' => $ch->id ?? null,
                     'category' => $ch->category->name ?? null,
                     'color' => $ch->category->color ?? null,
+                    'slug' => $ch->slug ?? null,
                     'score' => $ch->score ?? 0
                 ];
             })
